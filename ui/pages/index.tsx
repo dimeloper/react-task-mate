@@ -2,6 +2,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { withApollo } from '../lib/apollo';
 import { TaskStatus, useTasksQuery } from '../generated/graphql';
+import TaskList from '../components/TaskList';
 
 interface InitialProps {}
 
@@ -22,11 +23,7 @@ const IndexPage: NextPage<Props, InitialProps> = (props) => {
 
   const tasks = data?.tasks;
   return tasks ? (
-    <ul>
-      {tasks.map(task => {
-        return (<li key={task.id}>{task.title}</li>);
-      })}
-    </ul>
+    <TaskList tasks={tasks}/>
   ) : <p>There are no tasks.</p>;
 };
 
