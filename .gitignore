@@ -1,0 +1,5 @@
+/.idea/
+ui/node_modules
+api/node_modules
+ui/.next
+.DS_Store
