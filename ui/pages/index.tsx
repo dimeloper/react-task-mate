@@ -1,39 +1,16 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { withApollo } from '../lib/apollo';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
-
-const tasksQuery = gql(`
-query Tasks($status: TaskStatus) {
-  tasks(status: $status) {
-    id
-    title
-    status
-  }
-}
-`);
-
-interface TasksQuery {
-  tasks: {
-    id: number,
-    title: string,
-    status: string
-  }[]
-}
-
-interface TasksQueryVariables {
-  status: string;
-}
+import { TaskStatus, useTasksQuery } from '../generated/graphql';
 
 interface InitialProps {}
 
 interface Props extends InitialProps {}
 
 const IndexPage: NextPage<Props, InitialProps> = (props) => {
-  const { loading, error, data } = useQuery<TasksQuery, TasksQueryVariables>(tasksQuery, {
+  const { loading, error, data } = useTasksQuery({
     variables: {
-      status: 'active'
+      status: TaskStatus.Active
     }
   });
 
