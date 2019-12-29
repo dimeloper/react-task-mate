@@ -3,16 +3,17 @@ import { NextPage } from 'next';
 import { withApollo } from '../lib/apollo';
 import { TaskStatus, useTasksQuery } from '../generated/graphql';
 import TaskList from '../components/TaskList';
+import CreateTaskForm from '../components/CreateTaskForm';
 
 interface InitialProps {}
 
 interface Props extends InitialProps {}
 
 const IndexPage: NextPage<Props, InitialProps> = (props) => {
-  const { loading, error, data } = useTasksQuery({
+  const { loading, error, data, refetch } = useTasksQuery({
     variables: {
-      status: TaskStatus.Active
-    }
+      status: TaskStatus.Active,
+    },
   });
 
   if (loading) {
@@ -23,7 +24,10 @@ const IndexPage: NextPage<Props, InitialProps> = (props) => {
 
   const tasks = data?.tasks;
   return tasks ? (
-    <TaskList tasks={tasks}/>
+    <>
+      <CreateTaskForm onTaskCreated={refetch}/>
+      <TaskList tasks={tasks}/>
+    </>
   ) : <p>There are no tasks.</p>;
 };
 

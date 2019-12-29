@@ -75,6 +75,7 @@ button {
     outline: none;
     padding: 1rem;
     width: 100%;
+    font-size: inherit;
 }
 
 .new-task-text-input {
