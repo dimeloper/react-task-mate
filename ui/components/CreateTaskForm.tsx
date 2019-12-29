@@ -7,11 +7,11 @@ interface Props {
 
 const CreateTaskForm: React.FC<Props> = ({ onTaskCreated }) => {
   const [title, setTitle] = useState('');
-  const [createTask] = useCreateTaskMutation({
+  const [createTask, { loading, error }] = useCreateTaskMutation({
     onCompleted: () => {
       onTaskCreated();
       setTitle('');
-    }
+    },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,21 +20,27 @@ const CreateTaskForm: React.FC<Props> = ({ onTaskCreated }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (loading || title == null) {
+      return;
+    }
+
     createTask({
       variables: {
         input: {
-          title
-        }
-      }
-    })
+          title,
+        },
+      },
+    });
   };
 
   return <form onSubmit={handleSubmit}>
+    {error && <p className="alert-error">An error occured.</p>}
     <input type="text" name="title"
            placeholder="What would you like to get done?"
            autoComplete="off"
            className="text-input new-task-text-input"
-    value={title} onChange={handleChange} />
+           value={title} onChange={handleChange}/>
   </form>;
 };
 
