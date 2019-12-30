@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useUpdateTaskMutation } from '../generated/graphql';
+import { useRouter } from 'next/router';
 
 interface Values {
+  id: number;
   title: string;
 }
 
@@ -18,8 +21,27 @@ const UpdateTaskForm: React.FC<Props> = ({ initialValues }) => {
     }));
   };
 
+  const [updateTask, { loading, error, data }] = useUpdateTaskMutation();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    updateTask({
+      variables: {
+        input: values
+      }
+    });
+  };
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (data && data.updateTask) {
+      router.push('/');
+    }
+  }, [data]);
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
+      {error && <p className="alert-error">An error occured.</p>}
       <p>
         <label className="field-label">Title</label>
         <input type="text" name="title" className="text-input"
@@ -27,7 +49,11 @@ const UpdateTaskForm: React.FC<Props> = ({ initialValues }) => {
                onChange={handleChange}/>
       </p>
       <p>
-        <button type="submit" className="button">Save</button>
+        <button disabled={loading}
+                type="submit"
+                className="button">
+          {loading ? 'Loading..' : 'Save'}
+        </button>
       </p>
     </form>
   );

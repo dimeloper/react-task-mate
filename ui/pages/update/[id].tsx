@@ -21,7 +21,7 @@ const UpdatePage: NextPage = (props) => {
       ) : error ? (
         <p>An error occured..</p>
       ) : task ? (
-        <UpdateTaskForm initialValues={{title: task.title}} />
+        <UpdateTaskForm initialValues={{id: task.id, title: task.title}} />
       ) : (
         <p>Task not found.</p>)
       }

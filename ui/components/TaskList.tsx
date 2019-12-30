@@ -12,7 +12,7 @@ const TaskList: React.FC<Props> = ({ tasks }) => {
       {tasks.map(task => {
         return (<li className="task-list-item" key={task.id}>
           <Link href="/update/[id]" as={`/update/${task.id}`}>
-            <a>
+            <a className="task-list-item-title">
               {task.title}
             </a>
           </Link>
