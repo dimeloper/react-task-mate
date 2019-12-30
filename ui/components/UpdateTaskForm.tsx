@@ -41,7 +41,7 @@ const UpdateTaskForm: React.FC<Props> = ({ initialValues }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {error && <p className="alert-error">An error occured.</p>}
+      {error && <p className="alert-error">An error occurred.</p>}
       <p>
         <label className="field-label">Title</label>
         <input type="text" name="title" className="text-input"
