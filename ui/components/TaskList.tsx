@@ -1,17 +1,16 @@
 import React from 'react';
-import { Task, TaskStatus } from '../generated/graphql';
+import { Task } from '../generated/graphql';
 import TaskListItem from './TaskListItem';
 
 interface Props {
-  tasks: Task[],
-  status?: TaskStatus
+  tasks: Task[]
 }
 
-const TaskList: React.FC<Props> = ({ tasks, status }) => {
+const TaskList: React.FC<Props> = ({ tasks }) => {
   return (
     <ul className="task-list">
       {tasks.map(task => {
-        return (<TaskListItem task={task} status={status}/>);
+        return (<TaskListItem task={task}/>);
       })}
     </ul>
   );
