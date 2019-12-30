@@ -1,7 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { withApollo } from '../lib/apollo';
-import { TaskStatus, useTasksQuery } from '../generated/graphql';
+import { useTasksQuery } from '../generated/graphql';
 import TaskList from '../components/TaskList';
 import CreateTaskForm from '../components/CreateTaskForm';
 
@@ -12,7 +12,7 @@ interface Props extends InitialProps {}
 const IndexPage: NextPage<Props, InitialProps> = (props) => {
   const { loading, error, data, refetch } = useTasksQuery({
     variables: {
-      status: TaskStatus.Active,
+      status: undefined,
     },
   });
 

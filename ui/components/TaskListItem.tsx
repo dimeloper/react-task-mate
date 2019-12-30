@@ -5,6 +5,7 @@ import {
   TasksQuery,
   TasksQueryVariables,
   TaskStatus,
+  useChangeStatusMutation,
   useDeleteTaskMutation,
 } from '../generated/graphql';
 import Link from 'next/link';
@@ -15,7 +16,7 @@ interface Props {
 
 const TaskListItem: React.FC<Props> = ({ task }) => {
   const [deleteTask, { loading, error }] = useDeleteTaskMutation({
-    update: (cache, result) => {
+    update: (cache) => {
       const data = cache.readQuery<TasksQuery, TasksQueryVariables>({
         query: TasksDocument,
         variables: { status: TaskStatus.Active },
@@ -32,22 +33,40 @@ const TaskListItem: React.FC<Props> = ({ task }) => {
       }
     },
   });
-  const handleDeleteClick = () => {
-    deleteTask({
+  const handleDeleteClick = async () => {
+    await deleteTask({
       variables: {
         id: task.id,
       },
     });
   };
 
+  const [changeStatus, { loading: changingStatus, error: changeStatusError }] = useChangeStatusMutation();
+
+  const handleChangeStatus = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newStatus = task.status === TaskStatus.Active ? TaskStatus.Completed : TaskStatus.Active;
+    await changeStatus({
+      variables: {
+        id: task.id,
+        status: newStatus,
+      },
+    });
+  };
+
   useEffect(() => {
-    if (error) {
+    if (error || changeStatusError) {
       alert('An error occurred.');
     }
-  }, [error]);
+  }, [error, changeStatusError]);
 
   return (
     <li className="task-list-item" key={task.id}>
+      <label className="checkbox">
+        <input type="checkbox" onChange={handleChangeStatus}
+               disabled={changingStatus}
+               checked={task.status === TaskStatus.Completed}/>
+        <span className="checkbox-mark">&#10003;</span>
+      </label>
       <Link href="/update/[id]" as={`/update/${task.id}`}>
         <a className="task-list-item-title">
           {task.title}
